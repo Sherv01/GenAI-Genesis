@@ -2,121 +2,35 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Reset styles */
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+@import url("https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800&display=swap");
+
+html, body {
+  @apply m-0 p-0 box-border scroll-smooth font-orbitron;
+}
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-30px); }
+  100% { transform: translateY(0px); }
 }
 
-body {
-  font-family: 'Segoe UI', sans-serif;
-  background: linear-gradient(to bottom right, #0f0f2d, #000);
-  color: white;
-  line-height: 1.5;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  min-height: 100vh;
+.animate-float {
+  animation: float 6s ease-in-out infinite;
 }
 
-img {
-  max-width: 100%;
-  display: block;
-  border-radius: 1rem;
+.bg-memory-lane {
+  background: radial-gradient(circle at 20% 20%, #fbd3e9, #bbdefb, #d1c4e9, #b2dfdb, #fce4ec);
+  background-size: 400% 400%;
+  animation: memoryFlow 20s ease infinite;
 }
 
-input[type="file"] {
-  color: white;
-  padding: 0.75rem;
-  background: rgba(255, 255, 255, 0.05);
-  border: none;
-  border-radius: 0.5rem;
-  cursor: pointer;
-}
-
-button {
-  font-family: inherit;
-  font-weight: 600;
-  font-size: 1rem;
-  padding: 0.75rem 1.5rem;
-  border: none;
-  border-radius: 0.75rem;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-}
-
-button:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-button:hover:not(:disabled) {
-  filter: brightness(1.1);
-}
-.hero-section {
-  padding: 6rem 1rem;
-  text-align: center;
-  background: radial-gradient(ellipse at top, #1f1f47, #0f0f2d);
-  color: white;
-  position: relative;
-  overflow: hidden;
-}
-
-.hero-title {
-  font-size: 3.5rem;
-  font-weight: 800;
-  background: linear-gradient(90deg, #8b5cf6, #22d3ee);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  
-  /* Optional fallback for Firefox */
-  background-clip: text;
-  color: transparent;
-  
-  animation: fadeInUp 1s ease-out;
-}
-
-.hero-subtitle {
-  margin-top: 1rem;
-  color: #ccc;
-  font-size: 1.25rem;
-  animation: fadeInUp 1.3s ease-out;
-}
-
-.arrow {
-  animation: pulse 2s infinite;
-}
-
-.cta-button {
-  margin-top: 2rem;
-  padding: 1rem 2.5rem;
-  background: linear-gradient(90deg, #a78bfa, #38bdf8);
-  color: black;
-  font-weight: bold;
-  font-size: 1.1rem;
-  border: none;
-  border-radius: 0.75rem;
-  cursor: pointer;
-  transition: transform 0.2s ease;
-  box-shadow: 0 0 20px rgba(56, 189, 248, 0.5);
-}
-
-.cta-button:hover {
-  transform: scale(1.05);
-}
-
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes pulse {
-  0%, 100% { opacity: 0.6; }
-  50% { opacity: 1; }
+@keyframes memoryFlow {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }

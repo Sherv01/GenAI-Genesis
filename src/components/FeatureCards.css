@@ -1,0 +1,36 @@
+.features {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 30px;
+    padding: 60px 20px;
+    margin-top: 50px;
+  }
+  
+  .card {
+    background: rgba(255, 255, 255, 0.07);
+    backdrop-filter: blur(12px);
+    padding: 30px;
+    width: 280px;
+    border-radius: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: white;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .card h3 {
+    font-size: 1.4rem;
+    margin-bottom: 10px;
+    color: #ffffff;
+  }
+  
+  .card p {
+    color: #cccccc;
+    font-size: 1rem;
+  }
+  
+  .card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 0 20px rgba(255, 0, 255, 0.2);
+  }
+  
