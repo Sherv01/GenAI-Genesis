@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PhotoTo3D Model Selector</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="menu">
+            <h2>Select a Model</h2>
+            <select id="modelSelect">
+                <option value="teapot.obj">Teapot</option>
+                <option value="cow.obj">Cow</option>
+                <option value="pumpkin.obj">Pumpkin</option>
+                <option value="teddybear.obj">Teddy Bear</option>
+            </select>
+        </div>
+        <div id="viewer" class="viewer"></div>
+    </div>
+
+    <!-- Three.js Core -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+    <!-- OBJ Loader -->
+    <script src="https://cdn.jsdelivr.net/npm/three@0.134/examples/js/loaders/OBJLoader.js"></script>
+    <!-- Orbit Controls -->
+    <script src="https://cdn.jsdelivr.net/npm/three@0.134/examples/js/controls/OrbitControls.js"></script>
+    <!-- Viewer Script -->
+    <script src="viewer.js"></script>
+</body>
+</html>

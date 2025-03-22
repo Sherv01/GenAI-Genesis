@@ -1,0 +1,52 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+}
+
+.container {
+    display: flex;
+    flex-direction: row;
+    height: 100vh;
+    width: 100vw;
+}
+
+.menu {
+    width: 20%;
+    padding: 20px;
+    background-color: #ffffff;
+    box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+}
+
+.menu h2 {
+    margin-top: 0;
+    font-size: 1.5em;
+}
+
+.menu select {
+    width: 100%;
+    padding: 10px;
+    font-size: 1em;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.viewer {
+    width: 80%;
+    height: 100%;
+}
+
+/* Responsive design for smaller screens */
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+    }
+    .menu {
+        width: 100%;
+        box-shadow: none;
+    }
+    .viewer {
+        width: 100%;
+        height: 70vh;
+    }
+}
