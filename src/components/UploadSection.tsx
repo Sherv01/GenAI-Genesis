@@ -1,71 +1,56 @@
 import React, { useState } from "react";
-import "../App.css";
-import { UploadCloud, Download, Loader2 } from "lucide-react";
+import "./UploadSection.css";
 
-export default function UploadSection() {
-  const [image, setImage] = useState<File | null>(null);
-  const [downloadUrl, setDownloadUrl] = useState<string>("");
-  const [loading, setLoading] = useState(false);
+const UploadSection: React.FC = () => {
+  const [image, setImage] = useState<string | null>(null);
+  const [prompt, setPrompt] = useState("");
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) setImage(file);
+    if (file) setImage(URL.createObjectURL(file));
   };
 
-  const handleSubmit = async () => {
-    if (!image) return;
-    setLoading(true);
-    const formData = new FormData();
-    formData.append("file", image);
-
-    const response = await fetch("https://your-backend-api/generate", {
-      method: "POST",
-      body: formData,
-    });
-
-    const blob = await response.blob();
-    const url = URL.createObjectURL(blob);
-    setDownloadUrl(url);
-    setLoading(false);
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    const file = e.dataTransfer.files[0];
+    if (file) setImage(URL.createObjectURL(file));
   };
 
   return (
-    <section id="upload" className="upload-section">
-      <h2 className="upload-title">📤 Upload Your Image</h2>
-      <p className="upload-sub">And let TripoSR turn it into a mind-blowing 3D mesh</p>
+    <div className="upload-wrapper">
+      <h1 className="title">✨ TripoSR AI Mesh Generator</h1>
 
-      <label htmlFor="file-upload" className="file-upload-label">
-        <UploadCloud className="icon" /> Choose Image
-      </label>
-      <input
-        id="file-upload"
-        type="file"
-        accept="image/*"
-        onChange={handleImageUpload}
-        className="file-upload-input"
-      />
+      <div className="upload-container">
+        <div
+          className="image-box"
+          onDrop={handleDrop}
+          onDragOver={(e) => e.preventDefault()}
+        >
+          {image ? (
+            <img src={image} alt="Preview" className="preview-img" />
+          ) : (
+            <p className="placeholder-text">Drop image here or choose a file</p>
+          )}
+        </div>
 
-      {image && (
-        <img src={URL.createObjectURL(image)} alt="Preview" className="preview-upload" />
-      )}
+        <div className="inputs">
+          <input type="file" id="file-input" onChange={handleFileChange} />
+          <input
+            type="text"
+            placeholder="Enter a prompt..."
+            value={prompt}
+            onChange={(e) => setPrompt(e.target.value)}
+            className="prompt-input"
+          />
+          <button className="generate-button">🚀 Generate 3D Model</button>
+        </div>
+      </div>
 
-      <button
-        className="upload-button"
-        onClick={handleSubmit}
-        disabled={loading || !image}
-      >
-        {loading ? (
-          <><Loader2 className="spinner" /> Generating...</>
-        ) : (
-          <>Generate 3D Model</>
-        )}
-      </button>
-
-      {downloadUrl && (
-        <a href={downloadUrl} download="triposr_model.ply" className="download-link">
-          <Download className="icon" /> Download 3D Mesh
-        </a>
-      )}
-    </section>
+      <p className="powered-by">
+        Powered by Stability AI's TripoSR · Built for GenAI Genesis 🚀
+      </p>
+    </div>
   );
-}
+};
+
+export default UploadSection;

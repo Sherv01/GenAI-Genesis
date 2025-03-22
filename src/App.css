@@ -5,6 +5,20 @@ body {
   color: white;
 }
 
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #1e1e2f;
+  color: white;
+}
+
+.app {
+  max-width: 1200px;
+  margin: auto;
+  padding: 20px;
+}
+
+
 .main-container {
   min-height: 100vh;
   display: flex;
