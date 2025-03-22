@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './styles/App.css';
+import './App.css';
 import UploadSection from './components/UploadSection';
 
 const App: React.FC = () => {
