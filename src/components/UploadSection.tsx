@@ -94,7 +94,7 @@ const UploadSection: React.FC<UploadSectionProps> = ({ prompt, setPrompt, seed, 
       <section id="upload" className="relative py-24 px-4 flex flex-col items-center text-center">
         <h2 className="text-3xl font-bold text-pink-400 mb-4">Upload Something Meaningful 💌</h2>
         <p className="text-white max-w-xl mb-10">
-          Whether it’s a drawing, a memory, or a fleeting moment — let TripoSR turn it into something beautiful in 3D.
+          Whether it’s a drawing, a memory, or a fleeting moment — let TripoMemories turn it into something beautiful in 3D.
         </p>
         <label
           htmlFor="file-upload"
