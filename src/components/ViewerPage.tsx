@@ -4,8 +4,8 @@ import { OBJLoader } from "three/examples/jsm/loaders/OBJLoader";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { useLocation } from "react-router-dom";
 import Navbar from "./Navbar";
-import "./ViewerPage.css";
 import ParticlesBackground from "./ParticlesBackground";
+import "./ViewerPage.css";
 
 const ViewerPage: React.FC = () => {
   const mountRef = useRef<HTMLDivElement>(null);
@@ -22,7 +22,7 @@ const ViewerPage: React.FC = () => {
     const camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
     const renderer = new THREE.WebGLRenderer({ alpha: true });
     rendererRef.current = renderer;
-    const viewerSize = 500; // Reduced from 600px to 500px
+    const viewerSize = 500;
     renderer.setSize(viewerSize, viewerSize);
 
     if (mountRef.current) {
@@ -52,10 +52,13 @@ const ViewerPage: React.FC = () => {
     loader.load(
       "/models/mesh.obj",
       (object: THREE.Group) => {
+        // Rotate 90 degrees counterclockwise around X-axis to correct orientation
+        object.rotation.x = -Math.PI / 2; // -90 degrees in radians
+
         const box = new THREE.Box3().setFromObject(object);
         const center = box.getCenter(new THREE.Vector3());
         const size = box.getSize(new THREE.Vector3());
-        object.position.sub(center);
+        object.position.sub(center); // Center after rotation
         const scale = 5 / Math.max(size.x, size.y, size.z);
         object.scale.set(scale, scale, scale);
         scene.add(object);
@@ -67,6 +70,7 @@ const ViewerPage: React.FC = () => {
         const geometry = new THREE.BoxGeometry(1, 1, 1);
         const material = new THREE.MeshStandardMaterial({ color: 0x00ff00 });
         const cube = new THREE.Mesh(geometry, material);
+        cube.rotation.x = -Math.PI / 2; // Apply same rotation to fallback
         scene.add(cube);
         currentObject = cube;
       }

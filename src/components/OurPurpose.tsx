@@ -2,7 +2,7 @@ import React from "react";
 
 const OurPurpose = () => {
   return (
-    <section className="py-24 px-6 md:px-20 bg-black/30 backdrop-blur-md text-white text-center">
+    <section className="py-24 px-6 md:px-20 text-white text-center">
       <h2 className="text-3xl md:text-4xl font-bold mb-6 text-pink-400">
         Our Purpose
       </h2>

@@ -1,6 +1,6 @@
 const features = [
     { title: "📸 One Image", desc: "Start with a single photo and let AI do the rest." },
-    { title: "⚡ Super Fast", desc: "Generate full 3D mesh models in under 2 seconds." },
+    { title: "⌛ Permanent", desc: "Generate full 3D mesh models in the .obj format, ready to 3D print." },
     { title: "🧠 Smart Diffusion", desc: "Leverages Stability AI's TripoSR architecture." }
   ];
   

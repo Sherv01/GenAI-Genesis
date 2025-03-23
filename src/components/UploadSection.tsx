@@ -40,18 +40,18 @@ const UploadSection: React.FC<UploadSectionProps> = ({ prompt, setPrompt, seed, 
       <h1 className="title">✨ TripoSR AI Mesh Generator</h1>
       <section id="upload" className="relative py-24 px-4 flex flex-col items-center text-center">
         <h2 className="text-3xl font-bold text-pink-400 mb-4">Upload Something Meaningful 💌</h2>
-        <p className="text-black/70 max-w-xl mb-10">
+        <p className="text-white max-w-xl mb-10">
           Whether it’s a drawing, a memory, or a fleeting moment — let TripoSR turn it into something beautiful in 3D.
         </p>
         <label
           htmlFor="file-upload"
-          className="w-full max-w-md h-64 border-2 border-dashed border-pink-300 rounded-2xl flex items-center justify-center text-pink-400 text-center italic bg-white/50 hover:bg-white/70 transition cursor-pointer shadow-xl backdrop-blur-lg mb-6"
+          className="w-full max-w-md h-64 border-2 border-dashed border-pink-300 rounded-2xl flex items-center justify-center text-pink-400 text-center italic bg-transparent hover:scale-105 transition cursor-pointer shadow-xl backdrop-blur-lg mb-6"
         >
-          {image ? (
+            {image ? (
             <img src={image} alt="Preview" className="max-h-full max-w-full object-contain rounded-lg" />
-          ) : (
+            ) : (
             <p>Drop image here or choose a file</p>
-          )}
+            )}
           <input
             id="file-upload"
             type="file"
@@ -78,15 +78,7 @@ const UploadSection: React.FC<UploadSectionProps> = ({ prompt, setPrompt, seed, 
         >
           {isLoading ? "Generating..." : "✨ Generate 3D Memory"}
         </button>
-        {modelReady && (
-          <a
-            href="#"
-            download="TripoSR-Memory.obj"
-            className="mt-8 inline-block bg-sky-300 text-black font-semibold px-6 py-3 rounded-full shadow-md hover:scale-105 transition"
-          >
-            ⬇️ Download 3D File
-          </a>
-        )}
+        {modelReady}
       </section>
       <p className="powered-by">Powered by Stability AI's TripoSR · Built for GenAI Genesis 🚀</p>
     </div>

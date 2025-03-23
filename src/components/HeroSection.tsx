@@ -20,7 +20,7 @@ export default function HeroSection() {
 
       <a href="#upload">
         <button className="mt-10 px-8 py-3 bg-gradient-to-r from-pink-300 to-yellow-200 text-black font-semibold rounded-full shadow-md hover:scale-105 transition">
-          ✨ Let It Live in 3D
+          🖼️ Let It Live in 3D
         </button>
       </a>
     </section>
