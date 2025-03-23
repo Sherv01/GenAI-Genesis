@@ -1,26 +1,16 @@
 body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background-color: #f0f0f0;
-  }
-  
-  .container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    width: 100vw;
+    font-family: 'Quicksand', sans-serif;
   }
   
   .viewer {
-    width: 600px;
-    height: 600px;
+    width: 500px; /* Match new size */
+    height: 500px;
+    border: 2px solid #fff; /* White border */
   }
   
-  /* Responsive design for smaller screens */
   @media (max-width: 768px) {
     .viewer {
       width: 100%;
-      height: 70vh;
+      height: 300px; /* Smaller on mobile */
     }
   }

@@ -31,35 +31,24 @@ const UploadSection: React.FC<UploadSectionProps> = ({ prompt, setPrompt, seed, 
     setTimeout(() => {
       setIsLoading(false);
       setModelReady(true);
-      navigate("/viewer"); // Navigate after "generation"
+      navigate("/viewer", { state: { imageUrl: image } }); // Pass image URL
     }, 3000);
   };
 
   return (
     <div className="upload-wrapper">
       <h1 className="title">✨ TripoSR AI Mesh Generator</h1>
-      <section
-        id="upload"
-        className="relative py-24 px-4 flex flex-col items-center text-center"
-      >
-        <h2 className="text-3xl font-bold text-pink-400 mb-4">
-          Upload Something Meaningful 💌
-        </h2>
+      <section id="upload" className="relative py-24 px-4 flex flex-col items-center text-center">
+        <h2 className="text-3xl font-bold text-pink-400 mb-4">Upload Something Meaningful 💌</h2>
         <p className="text-black/70 max-w-xl mb-10">
           Whether it’s a drawing, a memory, or a fleeting moment — let TripoSR turn it into something beautiful in 3D.
         </p>
-
-        {/* Upload Box */}
         <label
           htmlFor="file-upload"
           className="w-full max-w-md h-64 border-2 border-dashed border-pink-300 rounded-2xl flex items-center justify-center text-pink-400 text-center italic bg-white/50 hover:bg-white/70 transition cursor-pointer shadow-xl backdrop-blur-lg mb-6"
         >
           {image ? (
-            <img
-              src={image}
-              alt="Preview"
-              className="max-h-full max-w-full object-contain rounded-lg"
-            />
+            <img src={image} alt="Preview" className="max-h-full max-w-full object-contain rounded-lg" />
           ) : (
             <p>Drop image here or choose a file</p>
           )}
@@ -71,8 +60,6 @@ const UploadSection: React.FC<UploadSectionProps> = ({ prompt, setPrompt, seed, 
             className="hidden"
           />
         </label>
-
-        {/* Prompt Input */}
         <input
           type="text"
           placeholder="Describe the memory in a sentence..."
@@ -80,8 +67,6 @@ const UploadSection: React.FC<UploadSectionProps> = ({ prompt, setPrompt, seed, 
           onChange={(e) => setPrompt(e.target.value)}
           className="w-full max-w-md px-4 py-3 rounded-xl bg-white/80 placeholder:text-gray-500 text-black mb-4 focus:outline-none focus:ring-2 focus:ring-pink-400 shadow-md"
         />
-
-        {/* Generate Button */}
         <button
           onClick={handleGenerate}
           disabled={isLoading}
@@ -93,8 +78,6 @@ const UploadSection: React.FC<UploadSectionProps> = ({ prompt, setPrompt, seed, 
         >
           {isLoading ? "Generating..." : "✨ Generate 3D Memory"}
         </button>
-
-        {/* Download Link */}
         {modelReady && (
           <a
             href="#"
@@ -105,9 +88,7 @@ const UploadSection: React.FC<UploadSectionProps> = ({ prompt, setPrompt, seed, 
           </a>
         )}
       </section>
-      <p className="powered-by">
-        Powered by Stability AI's TripoSR · Built for GenAI Genesis 🚀
-      </p>
+      <p className="powered-by">Powered by Stability AI's TripoSR · Built for GenAI Genesis 🚀</p>
     </div>
   );
 };
