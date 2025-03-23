@@ -12,28 +12,80 @@ interface UploadSectionProps {
 const UploadSection: React.FC<UploadSectionProps> = ({ prompt, setPrompt, seed, setSeed }) => {
   const [image, setImage] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [modelReady, setModelReady] = useState(false);
   const navigate = useNavigate();
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
       setImage(URL.createObjectURL(file));
-      setModelReady(false);
     }
   };
 
-  const handleGenerate = () => {
-    if (!image && !prompt) return;
-    if (image && prompt) console.log("Please enter either an image or a prompt, not both.");
-    setIsLoading(true);
-    setModelReady(false);
+  // Simulate a 15-second delay
+  const simulateGenerationDelay = () => {
+    return new Promise((resolve) => {
+      setTimeout(resolve, 15000); // 15 seconds
+    });
+  };
 
-    setTimeout(() => {
+  const handleGenerate = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    console.log("Generate clicked");
+
+    if (!image && !prompt) {
+      console.log("No image or prompt provided");
+      return;
+    }
+    if (image && prompt) {
+      console.log("Please enter either an image or a prompt, not both.");
+      return;
+    }
+    setIsLoading(true);
+
+    if (prompt) {
+      try {
+        console.log("Sending prompt to FastAPI...");
+        const response = await fetch("http://34.16.210.20:8000/generate-obj", {
+          method: "POST",
+          headers: {
+            "accept": "application/json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ prompt }),
+        });
+
+        if (!response.ok) {
+          throw new Error(`FastAPI error: ${response.status} - ${await response.text()}`);
+        }
+
+        const blob = await response.blob();
+        const objUrl = URL.createObjectURL(blob);
+        console.log("OBJ received:", objUrl);
+
+        // Simulate generation delay
+        console.log("Simulating 15-second generation delay...");
+        await simulateGenerationDelay();
+
+        console.log("Delay complete, navigating...");
+        setIsLoading(false);
+        navigate("/viewer", { state: { imageUrl: null, objUrl } });
+      } catch (error) {
+        console.error("Error generating OBJ from prompt:", error);
+        setIsLoading(false);
+        navigate("/viewer", { state: { imageUrl: null } });
+      }
+    } else if (image) {
+      const defaultObjUrl = "/models/default.obj";
+      console.log("Using default OBJ for image upload:", defaultObjUrl);
+
+      // Simulate generation delay
+      console.log("Simulating 15-second generation delay...");
+      await simulateGenerationDelay();
+
+      console.log("Delay complete, navigating...");
       setIsLoading(false);
-      setModelReady(true);
-      navigate("/viewer", { state: { imageUrl: image } }); // Pass image URL
-    }, 3000);
+      navigate("/viewer", { state: { imageUrl: image, objUrl: defaultObjUrl } });
+    }
   };
 
   return (
@@ -48,11 +100,11 @@ const UploadSection: React.FC<UploadSectionProps> = ({ prompt, setPrompt, seed, 
           htmlFor="file-upload"
           className="w-full max-w-md h-64 border-2 border-dashed border-pink-300 rounded-2xl flex items-center justify-center text-pink-400 text-center italic bg-transparent hover:scale-105 transition cursor-pointer shadow-xl backdrop-blur-lg mb-6"
         >
-            {image ? (
+          {image ? (
             <img src={image} alt="Preview" className="max-h-full max-w-full object-contain rounded-lg" />
-            ) : (
+          ) : (
             <p>Drop image here or choose a file</p>
-            )}
+          )}
           <input
             id="file-upload"
             type="file"
@@ -79,7 +131,6 @@ const UploadSection: React.FC<UploadSectionProps> = ({ prompt, setPrompt, seed, 
         >
           {isLoading ? "Generating..." : "✨ Generate 3D Memory"}
         </button>
-        {modelReady}
       </section>
     </div>
   );

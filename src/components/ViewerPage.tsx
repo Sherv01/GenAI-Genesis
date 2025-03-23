@@ -13,7 +13,7 @@ const ViewerPage: React.FC = () => {
   const initializedRef = useRef(false);
   const { state } = useLocation();
   const imageUrl = (state as { imageUrl?: string; objUrl?: string })?.imageUrl || "";
-  const objUrl = (state as { imageUrl?: string; objUrl?: string })?.objUrl || "/models/mesh.obj"; // Fallback
+  const objUrl = (state as { imageUrl?: string; objUrl?: string })?.objUrl || "";
 
   useEffect(() => {
     if (initializedRef.current) return;
@@ -27,56 +27,60 @@ const ViewerPage: React.FC = () => {
     renderer.setSize(viewerSize, viewerSize);
 
     if (mountRef.current) {
-      console.log("Mount children before:", mountRef.current.childNodes.length);
       while (mountRef.current.firstChild) {
         mountRef.current.removeChild(mountRef.current.firstChild);
       }
       mountRef.current.appendChild(renderer.domElement);
-      console.log("Renderer appended, children now:", mountRef.current.childNodes.length);
     }
 
-    // Lighting
     scene.add(new THREE.AmbientLight(0xffffff, 0.5));
     const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
     directionalLight.position.set(5, 5, 5);
     scene.add(directionalLight);
 
-    // OrbitControls
     const controls = new OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
     controls.dampingFactor = 0.05;
     camera.position.z = 5;
 
-    // Load mesh.obj
     const loader = new OBJLoader();
     let currentObject: THREE.Object3D | null = null;
-    loader.load(
-      objUrl, // Use dynamic objUrl
-      (object: THREE.Group) => {
-        // object.rotation.x = -Math.PI / 2; // Correct rotation
-        object.rotation.y = Math.PI; // Rotate 180 degrees around Y-axis
-        const box = new THREE.Box3().setFromObject(object);
-        const center = box.getCenter(new THREE.Vector3());
-        const size = box.getSize(new THREE.Vector3());
-        object.position.sub(center);
-        const scale = 5 / Math.max(size.x, size.y, size.z);
-        object.scale.set(scale, scale, scale);
-        scene.add(object);
-        currentObject = object;
-      },
-      undefined,
-      (error: unknown) => {
-        console.error("Error loading OBJ:", error);
-        const geometry = new THREE.BoxGeometry(1, 1, 1);
-        const material = new THREE.MeshStandardMaterial({ color: 0x00ff00 });
-        const cube = new THREE.Mesh(geometry, material);
-        cube.rotation.x = -Math.PI / 2;
-        scene.add(cube);
-        currentObject = cube;
-      }
-    );
 
-    // Animation loop
+    if (objUrl) {
+      loader.load(
+        objUrl,
+        (object: THREE.Group) => {
+          object.rotation.x = -Math.PI / 2;
+          const box = new THREE.Box3().setFromObject(object);
+          const center = box.getCenter(new THREE.Vector3());
+          const size = box.getSize(new THREE.Vector3());
+          object.position.sub(center);
+          const scale = 5 / Math.max(size.x, size.y, size.z);
+          object.scale.set(scale, scale, scale);
+          scene.add(object);
+          currentObject = object;
+          console.log("OBJ loaded successfully");
+        },
+        undefined,
+        (error: unknown) => {
+          console.error("Error loading OBJ:", error);
+          const geometry = new THREE.BoxGeometry(1, 1, 1);
+          const material = new THREE.MeshStandardMaterial({ color: 0x00ff00 });
+          const cube = new THREE.Mesh(geometry, material);
+          cube.rotation.x = -Math.PI / 2;
+          scene.add(cube);
+          currentObject = cube;
+        }
+      );
+    } else {
+      const geometry = new THREE.BoxGeometry(1, 1, 1);
+      const material = new THREE.MeshStandardMaterial({ color: 0x00ff00 });
+      const cube = new THREE.Mesh(geometry, material);
+      cube.rotation.x = -Math.PI / 2;
+      scene.add(cube);
+      currentObject = cube;
+    }
+
     const animate = () => {
       requestAnimationFrame(animate);
       controls.update();
@@ -84,25 +88,22 @@ const ViewerPage: React.FC = () => {
     };
     animate();
 
-    // Cleanup
     return () => {
       if (mountRef.current && renderer.domElement && rendererRef.current) {
         mountRef.current.removeChild(renderer.domElement);
         rendererRef.current.dispose();
-        console.log("Renderer cleaned up");
       }
       if (currentObject) {
         scene.remove(currentObject);
       }
     };
-  }, [objUrl]); // Add objUrl to dependencies
+  }, [objUrl]);
 
   return (
     <div className="bg-transparent font-quicksand text-white min-h-screen flex flex-col items-center justify-center">
       <Navbar />
       <ParticlesBackground />
       <div className="container mx-auto py-12 px-4 flex flex-col md:flex-row items-start justify-center gap-8">
-        {/* Image Section */}
         <div className="w-full md:w-1/2 flex justify-center">
           <div className="relative group">
             <img
@@ -115,22 +116,22 @@ const ViewerPage: React.FC = () => {
             </div>
           </div>
         </div>
-
-        {/* 3D Model Section */}
         <div className="w-full md:w-1/2 flex flex-col items-center">
           <div className="relative bg-gradient-to-br from-[#1a1a40] to-[#3a0ca3] p-4 rounded-xl shadow-2xl transform hover:scale-105 transition-all duration-300">
             <div ref={mountRef} className="viewer w-[500px] h-[500px]" />
             <div className="absolute top-4 left-4 bg-black/50 text-white px-2 py-1 rounded-full text-sm">
-              3D Model
+              {objUrl ? "3D Model" : "No Model Available"}
             </div>
           </div>
-          <a
-            href={objUrl}
-            download="TripoSR-Memory.obj"
-            className="mt-4 inline-block bg-gradient-to-r from-cyan-400 to-purple-500 text-black font-semibold px-6 py-3 rounded-full shadow-md hover:scale-105 transition-all"
-          >
-            ⬇️ Download OBJ
-          </a>
+          {objUrl && (
+            <a
+              href={objUrl}
+              download="generated.obj"
+              className="mt-4 inline-block bg-gradient-to-r from-cyan-400 to-purple-500 text-black font-semibold px-6 py-3 rounded-full shadow-md hover:scale-105 transition-all"
+            >
+              ⬇️ Download OBJ
+            </a>
+          )}
         </div>
       </div>
     </div>
