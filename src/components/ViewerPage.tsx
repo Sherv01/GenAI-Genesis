@@ -19,6 +19,7 @@ const ViewerPage: React.FC = () => {
     const renderer = new THREE.WebGLRenderer();
     const viewerWidth = 600; // Fixed 600px width
     const viewerHeight = 600; // Fixed 600px height
+    const viewerSize = Math.min(viewerWidth, viewerHeight);
     renderer.setSize(viewerWidth, viewerHeight);
     if (mountRef.current) {
       while (mountRef.current.firstChild) {
@@ -77,8 +78,8 @@ const ViewerPage: React.FC = () => {
       );
     };
 
-    // Load only mesh.obj
-    loadModel("/assets/mesh.obj");
+    // Load mesh.obj from new folder
+    loadModel("/models/mesh.obj");
 
     // Animation loop
     const animate = () => {
@@ -88,11 +89,11 @@ const ViewerPage: React.FC = () => {
     };
     animate();
 
-    // Handle window resize (keep fixed size, just update aspect if needed)
+    // Handle window resize (keep fixed size)
     const handleResize = () => {
       camera.aspect = 1;
       camera.updateProjectionMatrix();
-      renderer.setSize(viewerWidth, viewerHeight);
+      renderer.setSize(viewerSize, viewerSize);
     };
     window.addEventListener("resize", handleResize);
 

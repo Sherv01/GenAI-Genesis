@@ -1,20 +1,15 @@
-import React, { useState } from "react";
+import React from "react";
 import { Routes, Route } from "react-router-dom";
 import UploadSection from "./components/UploadSection";
 import ViewerPage from "./components/ViewerPage";
 import "./App.css";
+import HomePage from "./pages/HomePage";
 
 const App: React.FC = () => {
-  const [prompt, setPrompt] = useState("");
-  const [seed, setSeed] = useState(42);
-
   return (
     <div className="app">
       <Routes>
-        <Route
-          path="/"
-          element={<UploadSection prompt={prompt} setPrompt={setPrompt} seed={seed} setSeed={setSeed} />}
-        />
+        <Route path="/" element={<HomePage />} />
         <Route path="/viewer" element={<ViewerPage />} />
       </Routes>
     </div>
@@ -32,4 +27,3 @@ const inputStyle: React.CSSProperties = {
 };
 
 export default App;
-

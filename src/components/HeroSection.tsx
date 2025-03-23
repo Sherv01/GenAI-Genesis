@@ -1,4 +1,5 @@
 import React from "react";
+import UploadSection from "./UploadSection";
 
 export default function HeroSection() {
   return (
