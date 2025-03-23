@@ -12,69 +12,79 @@ interface UploadSectionProps {
 const UploadSection: React.FC<UploadSectionProps> = ({ prompt, setPrompt, seed, setSeed }) => {
   const [image, setImage] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [modelReady, setModelReady] = useState(false);
   const navigate = useNavigate();
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
       setImage(URL.createObjectURL(file));
-      setModelReady(false);
     }
+  };
+
+  // Simulate a 15-second delay
+  const simulateGenerationDelay = () => {
+    return new Promise((resolve) => {
+      setTimeout(resolve, 15000); // 15 seconds
+    });
   };
 
   const handleGenerate = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    if (!image && !prompt) return;
+    console.log("Generate clicked");
+
+    if (!image && !prompt) {
+      console.log("No image or prompt provided");
+      return;
+    }
     if (image && prompt) {
       console.log("Please enter either an image or a prompt, not both.");
       return;
     }
-    setIsLoading(true); // Start loading
-    setModelReady(false);
+    setIsLoading(true);
 
-    if (image) {
-      const fileInput = document.getElementById("file-upload") as HTMLInputElement;
-      const file = fileInput.files?.[0];
-      if (!file) {
-        console.error("No file selected");
-        setIsLoading(false);
-        return;
-      }
-
-      const formData = new FormData();
-      formData.append("image", file);
-
+    if (prompt) {
       try {
-        console.log("Sending image to server...");
-        const response = await fetch("http://localhost:3001/generate", {
+        console.log("Sending prompt to FastAPI...");
+        const response = await fetch("http://34.16.210.20:8000/generate-obj", {
           method: "POST",
-          body: formData,
+          headers: {
+            "accept": "application/json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ prompt }),
         });
 
-        const responseText = await response.text();
-        console.log("Server response:", responseText);
-
         if (!response.ok) {
-          throw new Error(`Server error: ${response.status} - ${responseText}`);
+          throw new Error(`FastAPI error: ${response.status} - ${await response.text()}`);
         }
 
-        const { imageUrl, objUrl } = JSON.parse(responseText);
-        console.log("Success:", { imageUrl, objUrl });
-        setIsLoading(false); // Stop loading only on success
-        setModelReady(true);
-        navigate("/viewer", { state: { imageUrl: image, objUrl } });
-      } catch (error) {
-        console.error("Generation failed:", error);
-        setIsLoading(false); // Stop loading on error
-        navigate("/viewer", { state: { imageUrl: image } }); // Fallback
-      }
-    } else {
-      setTimeout(() => {
+        const blob = await response.blob();
+        const objUrl = URL.createObjectURL(blob);
+        console.log("OBJ received:", objUrl);
+
+        // Simulate generation delay
+        console.log("Simulating 15-second generation delay...");
+        await simulateGenerationDelay();
+
+        console.log("Delay complete, navigating...");
         setIsLoading(false);
-        setModelReady(true);
+        navigate("/viewer", { state: { imageUrl: null, objUrl } });
+      } catch (error) {
+        console.error("Error generating OBJ from prompt:", error);
+        setIsLoading(false);
         navigate("/viewer", { state: { imageUrl: null } });
-      }, 3000);
+      }
+    } else if (image) {
+      const defaultObjUrl = "/models/default.obj";
+      console.log("Using default OBJ for image upload:", defaultObjUrl);
+
+      // Simulate generation delay
+      console.log("Simulating 15-second generation delay...");
+      await simulateGenerationDelay();
+
+      console.log("Delay complete, navigating...");
+      setIsLoading(false);
+      navigate("/viewer", { state: { imageUrl: image, objUrl: defaultObjUrl } });
     }
   };
 
@@ -121,7 +131,6 @@ const UploadSection: React.FC<UploadSectionProps> = ({ prompt, setPrompt, seed, 
         >
           {isLoading ? "Generating..." : "✨ Generate 3D Memory"}
         </button>
-        {modelReady}
       </section>
     </div>
   );
