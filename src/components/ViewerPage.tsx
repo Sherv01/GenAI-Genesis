@@ -13,7 +13,7 @@ const ViewerPage: React.FC = () => {
   const initializedRef = useRef(false);
   const { state } = useLocation();
   const imageUrl = (state as { imageUrl?: string; objUrl?: string })?.imageUrl || "";
-  const objUrl = (state as { imageUrl?: string; objUrl?: string })?.objUrl || "/models/mesh.obj"; // Fallback
+  const objUrl = (state as { imageUrl?: string; objUrl?: string })?.objUrl || "/models/generated.obj";
 
   useEffect(() => {
     if (initializedRef.current) return;
@@ -27,34 +27,28 @@ const ViewerPage: React.FC = () => {
     renderer.setSize(viewerSize, viewerSize);
 
     if (mountRef.current) {
-      console.log("Mount children before:", mountRef.current.childNodes.length);
       while (mountRef.current.firstChild) {
         mountRef.current.removeChild(mountRef.current.firstChild);
       }
       mountRef.current.appendChild(renderer.domElement);
-      console.log("Renderer appended, children now:", mountRef.current.childNodes.length);
     }
 
-    // Lighting
     scene.add(new THREE.AmbientLight(0xffffff, 0.5));
     const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
     directionalLight.position.set(5, 5, 5);
     scene.add(directionalLight);
 
-    // OrbitControls
     const controls = new OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
     controls.dampingFactor = 0.05;
     camera.position.z = 5;
 
-    // Load mesh.obj
     const loader = new OBJLoader();
     let currentObject: THREE.Object3D | null = null;
     loader.load(
-      objUrl, // Use dynamic objUrl
+      objUrl,
       (object: THREE.Group) => {
-        // object.rotation.x = -Math.PI / 2; // Correct rotation
-        object.rotation.y = Math.PI; // Rotate 180 degrees around Y-axis
+        object.rotation.x = -Math.PI / 2;
         const box = new THREE.Box3().setFromObject(object);
         const center = box.getCenter(new THREE.Vector3());
         const size = box.getSize(new THREE.Vector3());
@@ -76,7 +70,6 @@ const ViewerPage: React.FC = () => {
       }
     );
 
-    // Animation loop
     const animate = () => {
       requestAnimationFrame(animate);
       controls.update();
@@ -84,25 +77,22 @@ const ViewerPage: React.FC = () => {
     };
     animate();
 
-    // Cleanup
     return () => {
       if (mountRef.current && renderer.domElement && rendererRef.current) {
         mountRef.current.removeChild(renderer.domElement);
         rendererRef.current.dispose();
-        console.log("Renderer cleaned up");
       }
       if (currentObject) {
         scene.remove(currentObject);
       }
     };
-  }, [objUrl]); // Add objUrl to dependencies
+  }, [objUrl]);
 
   return (
     <div className="bg-transparent font-quicksand text-white min-h-screen flex flex-col items-center justify-center">
       <Navbar />
       <ParticlesBackground />
       <div className="container mx-auto py-12 px-4 flex flex-col md:flex-row items-start justify-center gap-8">
-        {/* Image Section */}
         <div className="w-full md:w-1/2 flex justify-center">
           <div className="relative group">
             <img
@@ -115,8 +105,6 @@ const ViewerPage: React.FC = () => {
             </div>
           </div>
         </div>
-
-        {/* 3D Model Section */}
         <div className="w-full md:w-1/2 flex flex-col items-center">
           <div className="relative bg-gradient-to-br from-[#1a1a40] to-[#3a0ca3] p-4 rounded-xl shadow-2xl transform hover:scale-105 transition-all duration-300">
             <div ref={mountRef} className="viewer w-[500px] h-[500px]" />

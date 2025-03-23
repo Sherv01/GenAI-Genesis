@@ -23,17 +23,59 @@ const UploadSection: React.FC<UploadSectionProps> = ({ prompt, setPrompt, seed, 
     }
   };
 
-  const handleGenerate = () => {
+  const handleGenerate = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
     if (!image && !prompt) return;
-    if (image && prompt) console.log("Please enter either an image or a prompt, not both.");
-    setIsLoading(true);
+    if (image && prompt) {
+      console.log("Please enter either an image or a prompt, not both.");
+      return;
+    }
+    setIsLoading(true); // Start loading
     setModelReady(false);
 
-    setTimeout(() => {
-      setIsLoading(false);
-      setModelReady(true);
-      navigate("/viewer", { state: { imageUrl: image } }); // Pass image URL
-    }, 3000);
+    if (image) {
+      const fileInput = document.getElementById("file-upload") as HTMLInputElement;
+      const file = fileInput.files?.[0];
+      if (!file) {
+        console.error("No file selected");
+        setIsLoading(false);
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append("image", file);
+
+      try {
+        console.log("Sending image to server...");
+        const response = await fetch("http://localhost:3001/generate", {
+          method: "POST",
+          body: formData,
+        });
+
+        const responseText = await response.text();
+        console.log("Server response:", responseText);
+
+        if (!response.ok) {
+          throw new Error(`Server error: ${response.status} - ${responseText}`);
+        }
+
+        const { imageUrl, objUrl } = JSON.parse(responseText);
+        console.log("Success:", { imageUrl, objUrl });
+        setIsLoading(false); // Stop loading only on success
+        setModelReady(true);
+        navigate("/viewer", { state: { imageUrl: image, objUrl } });
+      } catch (error) {
+        console.error("Generation failed:", error);
+        setIsLoading(false); // Stop loading on error
+        navigate("/viewer", { state: { imageUrl: image } }); // Fallback
+      }
+    } else {
+      setTimeout(() => {
+        setIsLoading(false);
+        setModelReady(true);
+        navigate("/viewer", { state: { imageUrl: null } });
+      }, 3000);
+    }
   };
 
   return (
@@ -48,11 +90,11 @@ const UploadSection: React.FC<UploadSectionProps> = ({ prompt, setPrompt, seed, 
           htmlFor="file-upload"
           className="w-full max-w-md h-64 border-2 border-dashed border-pink-300 rounded-2xl flex items-center justify-center text-pink-400 text-center italic bg-transparent hover:scale-105 transition cursor-pointer shadow-xl backdrop-blur-lg mb-6"
         >
-            {image ? (
+          {image ? (
             <img src={image} alt="Preview" className="max-h-full max-w-full object-contain rounded-lg" />
-            ) : (
+          ) : (
             <p>Drop image here or choose a file</p>
-            )}
+          )}
           <input
             id="file-upload"
             type="file"

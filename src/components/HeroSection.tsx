@@ -15,7 +15,7 @@ export default function HeroSection() {
       </p>
 
       <p className="mt-3 text-base text-white/60 max-w-xl mx-auto">
-        With TripoSR, your memories become form — gentle, visual, and eternal.
+        With TripoMemories, your memories become form — gentle, visual, and eternal.
       </p>
 
       <a href="#upload">

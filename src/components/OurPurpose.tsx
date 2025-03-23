@@ -7,7 +7,7 @@ const OurPurpose = () => {
         Our Purpose
       </h2>
       <p className="max-w-3xl mx-auto text-white/80 text-lg leading-relaxed">
-        We believe that technology should serve human meaning. TripoSR isn’t just about generating assets — it’s about preserving emotion, imagination, and memory in a form that can be shared, touched, and felt. <br /><br />
+        We believe that technology should serve human meaning. TripoMemories isn’t just about generating assets — it’s about preserving emotion, imagination, and memory in a form that can be shared, touched, and felt. <br /><br />
         Whether it’s a drawing from your child, a treasured photo, or a creative idea in your mind — we’re here to help you give it form, in 3D.
       </p>
     </section>
