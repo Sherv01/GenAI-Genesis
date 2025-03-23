@@ -3,11 +3,14 @@
 @tailwind utilities;
 
 @import url("https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap");
+
 
 html, body {
   @apply m-0 p-0 box-border scroll-smooth font-orbitron;
 }
 @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -27,6 +30,14 @@ html, body {
   background: radial-gradient(circle at 20% 20%, #fbd3e9, #bbdefb, #d1c4e9, #b2dfdb, #fce4ec);
   background-size: 400% 400%;
   animation: memoryFlow 20s ease infinite;
+}
+
+.mouse-reactive-bg {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at var(--mouse-x) var(--mouse-y), #fbd3e9, #bbdefb);
+  animation: memoryFlow 20s ease infinite;
+  z-index: -10;
 }
 
 @keyframes memoryFlow {

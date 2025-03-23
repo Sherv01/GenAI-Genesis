@@ -13,32 +13,30 @@ export default function HomePage() {
   const [seed, setSeed] = useState(42);
 
   const particlesInit = async (engine: any) => {
-    await loadSlim(engine); // Slim version to avoid errors
+    await loadSlim(engine);
   };
 
   return (
-    <div className="relative min-h-screen w-full overflow-x-hidden font-grotesk text-white bg-black">
-      {/* Starfield Particles */}
+    <div className="relative min-h-screen w-full overflow-x-hidden font-quicksand text-white">
+      {/* Animated, Mouse-Reactive Wallpaper */}
       <Particles
         id="tsparticles"
         className="absolute inset-0 -z-10"
         init={particlesInit}
         options={{
-          background: { color: "transparent" },
+          background: {
+            color: "#0f0f2f", // Match your gradient start for coherence
+          },
           fpsLimit: 60,
           interactivity: {
             events: {
-              onHover: { enable: true, mode: "bubble" },
+              onHover: { enable: true, mode: "repulse" },
+              onClick: { enable: true, mode: "push" },
               resize: true,
             },
             modes: {
-              bubble: {
-                distance: 150,
-                size: 6,
-                duration: 2,
-                opacity: 0.8,
-                speed: 3,
-              },
+              repulse: { distance: 100, duration: 0.4 },
+              push: { quantity: 4 },
             },
           },
           particles: {
@@ -47,22 +45,29 @@ export default function HomePage() {
               color: "#8888ff",
               distance: 140,
               enable: true,
-              opacity: 0.3,
+              opacity: 0.5, // Increased for visibility
               width: 1,
             },
             move: {
               enable: true,
-              speed: 1.2,
-              outModes: { default: "bounce" },
+              speed: 2,
+              direction: "none",
               random: true,
+              outModes: { default: "bounce" },
             },
             number: {
-              density: { enable: true, area: 700 },
-              value: 100,
+              density: { enable: true, area: 800 },
+              value: 120,
             },
-            opacity: { value: 0.5 },
+            opacity: {
+              value: 0.8, // Increased for visibility
+              animation: { enable: true, speed: 1, minimumValue: 0.2 },
+            },
+            size: {
+              value: { min: 1, max: 5 },
+              animation: { enable: true, speed: 3, minimumValue: 0.5 },
+            },
             shape: { type: "circle" },
-            size: { value: { min: 1, max: 5 } },
           },
           detectRetina: true,
         }}

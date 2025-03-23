@@ -4,7 +4,7 @@
 
 /* Font family override if needed */
 body {
-  @apply font-orbitron text-white bg-gradient-to-br from-[#0f0f2f] to-[#1b1b5a];
+  @apply font-quicksand text-white bg-gradient-to-br from-[#0f0f2f] to-[#1b1b5a];
   scroll-behavior: smooth;
 }
 

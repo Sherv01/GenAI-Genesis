@@ -5,6 +5,8 @@ export default {
     extend: {
       fontFamily: {
         orbitron: ["Orbitron", "sans-serif"],
+        poppins: ['Poppins', 'sans-serif'],
+        quicksand: ['Quicksand', 'sans-serif'],
       },
     },
   },
