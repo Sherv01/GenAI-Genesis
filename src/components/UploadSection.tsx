@@ -1,10 +1,13 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import "./UploadSection.css";
 
 const UploadSection: React.FC = () => {
   const [image, setImage] = useState<string | null>(null);
   const [prompt, setPrompt] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [modelReady, setModelReady] = useState(false);
+  const navigate = useNavigate();
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -22,6 +25,7 @@ const UploadSection: React.FC = () => {
     setTimeout(() => {
       setIsLoading(false);
       setModelReady(true);
+      navigate("/viewer"); // Navigate to viewer after "generation"
     }, 3000);
   };
 
