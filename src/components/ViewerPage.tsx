@@ -3,6 +3,7 @@ import * as THREE from "three";
 import { OBJLoader } from "three/examples/jsm/loaders/OBJLoader";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import "./ViewerPage.css";
+import ParticlesBackground from "./ParticlesBackground";
 
 const ViewerPage: React.FC = () => {
   const mountRef = useRef<HTMLDivElement>(null);
@@ -107,7 +108,9 @@ const ViewerPage: React.FC = () => {
   }, []);
 
   return (
+    
     <div className="container">
+      <ParticlesBackground />;
       <div ref={mountRef} className="viewer" />
     </div>
   );
