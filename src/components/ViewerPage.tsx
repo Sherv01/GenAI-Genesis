@@ -12,7 +12,8 @@ const ViewerPage: React.FC = () => {
   const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
   const initializedRef = useRef(false);
   const { state } = useLocation();
-  const imageUrl = (state as { imageUrl?: string })?.imageUrl || "";
+  const imageUrl = (state as { imageUrl?: string; objUrl?: string })?.imageUrl || "";
+  const objUrl = (state as { imageUrl?: string; objUrl?: string })?.objUrl || "/models/mesh.obj"; // Fallback
 
   useEffect(() => {
     if (initializedRef.current) return;
@@ -50,15 +51,14 @@ const ViewerPage: React.FC = () => {
     const loader = new OBJLoader();
     let currentObject: THREE.Object3D | null = null;
     loader.load(
-      "/models/mesh.obj",
+      objUrl, // Use dynamic objUrl
       (object: THREE.Group) => {
-        // Rotate 90 degrees counterclockwise around X-axis to correct orientation
-        object.rotation.x = -Math.PI / 2; // -90 degrees in radians
-
+        // object.rotation.x = -Math.PI / 2; // Correct rotation
+        object.rotation.y = Math.PI; // Rotate 180 degrees around Y-axis
         const box = new THREE.Box3().setFromObject(object);
         const center = box.getCenter(new THREE.Vector3());
         const size = box.getSize(new THREE.Vector3());
-        object.position.sub(center); // Center after rotation
+        object.position.sub(center);
         const scale = 5 / Math.max(size.x, size.y, size.z);
         object.scale.set(scale, scale, scale);
         scene.add(object);
@@ -66,11 +66,11 @@ const ViewerPage: React.FC = () => {
       },
       undefined,
       (error: unknown) => {
-        console.error("Error loading mesh.obj:", error);
+        console.error("Error loading OBJ:", error);
         const geometry = new THREE.BoxGeometry(1, 1, 1);
         const material = new THREE.MeshStandardMaterial({ color: 0x00ff00 });
         const cube = new THREE.Mesh(geometry, material);
-        cube.rotation.x = -Math.PI / 2; // Apply same rotation to fallback
+        cube.rotation.x = -Math.PI / 2;
         scene.add(cube);
         currentObject = cube;
       }
@@ -95,7 +95,7 @@ const ViewerPage: React.FC = () => {
         scene.remove(currentObject);
       }
     };
-  }, []);
+  }, [objUrl]); // Add objUrl to dependencies
 
   return (
     <div className="bg-transparent font-quicksand text-white min-h-screen flex flex-col items-center justify-center">
@@ -125,7 +125,7 @@ const ViewerPage: React.FC = () => {
             </div>
           </div>
           <a
-            href="/models/mesh.obj"
+            href={objUrl}
             download="TripoSR-Memory.obj"
             className="mt-4 inline-block bg-gradient-to-r from-cyan-400 to-purple-500 text-black font-semibold px-6 py-3 rounded-full shadow-md hover:scale-105 transition-all"
           >

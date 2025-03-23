@@ -2,6 +2,7 @@ import React from "react";
 import { Routes, Route } from "react-router-dom";
 import UploadSection from "./components/UploadSection";
 import ViewerPage from "./components/ViewerPage";
+import Gallery from "./components/Gallery";
 import "./App.css";
 import HomePage from "./pages/HomePage";
 
@@ -11,6 +12,7 @@ const App: React.FC = () => {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/viewer" element={<ViewerPage />} />
+        <Route path="/gallery" element={<Gallery />} />
       </Routes>
     </div>
   );

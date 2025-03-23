@@ -24,7 +24,8 @@ const UploadSection: React.FC<UploadSectionProps> = ({ prompt, setPrompt, seed, 
   };
 
   const handleGenerate = () => {
-    if (!image || !prompt) return;
+    if (!image && !prompt) return;
+    if (image && prompt) console.log("Please enter either an image or a prompt, not both.");
     setIsLoading(true);
     setModelReady(false);
 
@@ -80,7 +81,6 @@ const UploadSection: React.FC<UploadSectionProps> = ({ prompt, setPrompt, seed, 
         </button>
         {modelReady}
       </section>
-      <p className="powered-by">Powered by Stability AI's TripoSR · Built for GenAI Genesis 🚀</p>
     </div>
   );
 };
